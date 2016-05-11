@@ -40,16 +40,16 @@ ExpressOAuthServer.prototype.authenticate = function() {
     var response = new Response(res);
 
     return Promise.bind(this)
-      .then(function() {
-        return server.authenticate(request, response);
-      })
-      .tap(function(token) {
-        res.locals.oauth = { token: token };
-      })
-      .catch(function(e) {
-        return handleError(e, req, res);
-      })
-      .finally(next);
+        .then(function() {
+          return server.authenticate(request, response);
+        })
+        .tap(function(token) {
+          res.locals.oauth = { token: token };
+        })
+        .catch(function(e) {
+          return handleError(e, req, res);
+        })
+        .finally(next);
   };
 };
 
@@ -69,19 +69,19 @@ ExpressOAuthServer.prototype.authorize = function() {
     var response = new Response(res);
 
     return Promise.bind(this)
-      .then(function() {
-        return server.authorize(request, response);
-      })
-      .tap(function(code) {
-        res.locals.oauth = { code: code };
-      })
-      .then(function() {
-        return handleResponse(req, res, response);
-      })
-      .catch(function(e) {
-        return handleError(e, req, res, response);
-      })
-      .finally(next);
+        .then(function() {
+          return server.authorize(request, response);
+        })
+        .tap(function(code) {
+          res.locals.oauth = { code: code };
+        })
+        .then(function() {
+          return handleResponse(req, res, response);
+        })
+        .catch(function(e) {
+          return handleError(e, req, res, response);
+        })
+        .finally(next);
   };
 };
 
@@ -101,19 +101,19 @@ ExpressOAuthServer.prototype.token = function() {
     var response = new Response(res);
 
     return Promise.bind(this)
-      .then(function() {
-        return server.token(request, response);
-      })
-      .tap(function(token) {
-        res.locals.oauth = { token: token };
-      })
-      .then(function() {
-        return handleResponse(req, res, response);
-      })
-      .catch(function(e) {
-        return handleError(e, req, res, response);
-      })
-      .finally(next);
+        .then(function() {
+          return server.token(request, response);
+        })
+        .tap(function(token) {
+          res.locals.oauth = { token: token };
+        })
+        .then(function() {
+          return handleResponse(req, res, response);
+        })
+        .catch(function(e) {
+          return handleError(e, req, res, response);
+        })
+        .finally(next);
   };
 };
 
@@ -123,9 +123,7 @@ ExpressOAuthServer.prototype.token = function() {
 
 var handleResponse = function(req, res, response) {
   res.set(response.headers);
-
-  res.send(response.body);
-  res.status(response.status);
+  res.status(response.status).send(response.body);
 };
 
 /**
@@ -141,8 +139,7 @@ var handleError = function(e, req, res, response) {
     return res.status(e.code);
   }
 
-  res.send({ error: e.name, error_description: e.message });
-  res.status(e.code);
+  res.status(e.code).send({ error: e.name, error_description: e.message });
 };
 
 /**
